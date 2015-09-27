@@ -6,9 +6,11 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,14 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-import com.simplify.android.sdk.Simplify;
-import com.simplify.android.sdk.model.SimplifyError;
-import com.simplify.android.sdk.model.Token;
 
-public class ShopperViewActivity extends Activity
+public class ShopperViewActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -32,10 +29,9 @@ public class ShopperViewActivity extends Activity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
+/*
+
+    private CharSequence mTitle;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +40,7 @@ public class ShopperViewActivity extends Activity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        //mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -62,7 +58,7 @@ public class ShopperViewActivity extends Activity
                 .commit();
     }
 
-    public void onSectionAttached(int number) {
+ /*   public void onSectionAttached(int number) {
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
@@ -74,14 +70,14 @@ public class ShopperViewActivity extends Activity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
-    }
+    }*/
 
-    public void restoreActionBar() {
+    /*public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-    }
+    }*/
 
 
     @Override
@@ -91,7 +87,7 @@ public class ShopperViewActivity extends Activity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.shopper_view, menu);
-            restoreActionBar();
+            //restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -144,16 +140,19 @@ public class ShopperViewActivity extends Activity
             return rootView;
         }
 
-        @Override
-        public void onAttach(Activity activity) {
+
+/*
+@Override
+public void onAttach(Activity activity) {
             super.onAttach(activity);
             ((ShopperViewActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
-        }
+        }*/
     }
 
-    public void onAddCard(View view){
-
+    public void openAddCardView(View view){
+        Intent intent = new Intent(this, AddCardActivity.class);
+        startActivity(intent);
     }
 
 }

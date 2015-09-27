@@ -31,5 +31,5 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.4.0'
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.simplify:sdk-android:1.0.2'
+    compile 'com.simplify:simplify-android:2.0.1'
 }

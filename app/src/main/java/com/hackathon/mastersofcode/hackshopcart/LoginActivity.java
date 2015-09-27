@@ -68,7 +68,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState);
         Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_login);
-        setupActionBar();
+        //setupActionBar();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -112,17 +112,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     /**
@@ -385,6 +374,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 br.close();
                 output += System.getProperty("line.separator") + responseOutput.toString();
                 Log.d(TAG, output);
+
+                if(responseCode == 200){
+                    MoCUtils.user_email = mEmail;
+                }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
