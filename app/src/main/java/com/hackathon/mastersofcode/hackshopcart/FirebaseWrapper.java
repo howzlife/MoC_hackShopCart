@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 
 import Domain.Item;
 
@@ -531,12 +532,13 @@ public class FirebaseWrapper extends Context {
         ref.push();
     }
 
-    public void addItem(Item item) {
+    public void addItem(Item item, List<Item> itemsList) {
         if(!items.containsKey(item.getUpcCode())){
             items.put(item.getUpcCode(), 1);
         } else {
             items.put(item.getUpcCode(), items.get(item.getUpcCode()) + 1);
         }
+        itemsList.get(itemsList.indexOf(item)).setQuantity(items.get(item.getUpcCode()));
         ref.child("transactions").child(tID).child("items").setValue(items);
         ref.push();
     }

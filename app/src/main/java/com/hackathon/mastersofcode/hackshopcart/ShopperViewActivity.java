@@ -140,7 +140,7 @@ public class ShopperViewActivity extends AppCompatActivity
             return rootView;
         }
 
-
+    }
 /*
 @Override
 public void onAttach(Activity activity) {
@@ -148,7 +148,7 @@ public void onAttach(Activity activity) {
             ((ShopperViewActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }*/
-    }
+
 
     public void openAddCardView(View view){
         Intent intent = new Intent(this, AddCardActivity.class);

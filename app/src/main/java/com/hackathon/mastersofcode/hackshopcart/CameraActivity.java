@@ -77,8 +77,8 @@ public class CameraActivity extends Activity implements OnClickListener {
         cartItemsListView.setAdapter(listAdapter);
 
         Firebase.setAndroidContext(this);
-        Firebase ref = new Firebase("https://pliu-test.firebaseio.com/");
-        ref.authWithCustomToken("cP0KXtG09Tw7SIr7gXJMNpfcDChts06sKraqiBNd", new Firebase.AuthResultHandler() {
+        Firebase ref = new Firebase("https://hackshopcart.firebaseio.com/");
+        ref.authWithCustomToken("nbg6SoR7mv8SYiXLWf9bTsdA33ZfuDVCZagvYHki", new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
                 Log.d(TAG, "Successfully logged in with User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
@@ -165,7 +165,7 @@ public class CameraActivity extends Activity implements OnClickListener {
                 gateway.addTransactionElement(TRANSACTION_ID, item);
                 subTotal += item.getPrice();
 
-                wrapper.addItem(item);
+                wrapper.addItem(item, cart.getItemsList());
             }
 
         } else {
@@ -193,7 +193,7 @@ public class CameraActivity extends Activity implements OnClickListener {
                 URL url = new URL("https://glacial-bastion-6427.herokuapp.com/charge_card");
                 HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
 
-                String urlParameters = "email=nico.dubus@hotmail.com&transID="+TRANSACTION_ID;
+                String urlParameters = "email=nick@nick.com" + "&transID="+TRANSACTION_ID;
                 connection.setRequestMethod("POST");
 
                 connection.setDoOutput(true);
