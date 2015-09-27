@@ -51,4 +51,13 @@
         android:layout_below="@+id/cartItemsListView"
         android:layout_toEndOf="@+id/scanButton" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Total"
+        android:id="@+id/total"
+        android:layout_alignBottom="@+id/scan_format"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

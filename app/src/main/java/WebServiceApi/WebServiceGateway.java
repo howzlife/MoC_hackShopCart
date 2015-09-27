@@ -19,6 +19,8 @@ public class WebServiceGateway {
     public WebServiceGateway() {
         itemsMap.put("667888093731", new Item("667888093731", 1.99, "3 Subject Notebook 250", "3 Subject Notebook"));
         itemsMap.put("180854000101", new Item("180854000101", 2.99, "Red Bull 250ml reg", "Red Bull 250ml Regular"));
+        itemsMap.put("067311057895", new Item("067311057895", 1.99, "Oasis Trop Mang Smoothie 1.75L", "Oasis Trop Mang Smoothie 1.75L"));
+        itemsMap.put("770981093178", new Item("770981093178", 3.49, "Coconut Macaroons 200g", "Oasis Trop Mang Smoothie 1.75L"));
     }
 
     public HashMap getItemsMap() {

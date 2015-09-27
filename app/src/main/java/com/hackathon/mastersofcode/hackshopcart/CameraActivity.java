@@ -45,7 +45,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class CameraActivity extends Activity implements OnClickListener {
 
     private Button scanButton, payButton;
-    private TextView formatTxt, contentTxt;
+    private TextView totalTxt;
     private WebServiceGateway gateway = new WebServiceGateway();
     private HashMap<String, Item> itemsMap;
     private double subTotal, tax = 0.00;
@@ -64,8 +64,7 @@ public class CameraActivity extends Activity implements OnClickListener {
 
         scanButton = (Button)findViewById(R.id.scanButton);
         payButton = (Button) findViewById(R.id.payButton);
-        formatTxt = (TextView)findViewById(R.id.scan_format);
-        contentTxt = (TextView)findViewById(R.id.scan_content);
+        totalTxt = (TextView)findViewById(R.id.total);
 
         scanButton.setOnClickListener(this);
         payButton.setOnClickListener(this);
@@ -164,7 +163,8 @@ public class CameraActivity extends Activity implements OnClickListener {
                 cart.addItem(item);
                 gateway.addTransactionElement(TRANSACTION_ID, item);
                 subTotal += item.getPrice();
-
+        
+                totalTxt.setText("SubTotal: $" + subTotal);
                 wrapper.addItem(item, cart.getItemsList());
             }
 
@@ -193,7 +193,7 @@ public class CameraActivity extends Activity implements OnClickListener {
                 URL url = new URL("https://glacial-bastion-6427.herokuapp.com/charge_card");
                 HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
 
-                String urlParameters = "email=nick@nick.com" + "&transID="+TRANSACTION_ID;
+                String urlParameters = "email=nick@lucky.com" + "&transID="+TRANSACTION_ID;
                 connection.setRequestMethod("POST");
 
                 connection.setDoOutput(true);
