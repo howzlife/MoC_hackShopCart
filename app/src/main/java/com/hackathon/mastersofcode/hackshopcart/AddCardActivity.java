@@ -32,7 +32,7 @@ public class AddCardActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
 
-        Simplify.init("sbpb_NDhiM2Q3ZDAtNjg2MS00M2FmLWJiYWEtYTNmZTc5YzMyYTE0");
+        Simplify.init("sbpb_MDQxYTE2NjEtYTJiMS00M2IwLTlhMDktNzczOGEzMGUxZDlj");
 
         // init card editor
         final CardEditor cardEditor = (CardEditor) findViewById(R.id.card_editor);
