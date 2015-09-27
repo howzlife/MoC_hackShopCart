@@ -46,7 +46,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pay"
+        android:text="Checkout"
         android:id="@+id/payButton"
         android:layout_below="@+id/cartItemsListView"
         android:layout_toEndOf="@+id/scanButton" />

@@ -2,9 +2,11 @@ package com.hackathon.mastersofcode.hackshopcart;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,21 +16,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
 
 import Domain.Item;
 import Domain.Cart;
 import WebServiceApi.WebServiceGateway;
 
 import com.firebase.client.DataSnapshot;
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import google.zxing.integration.android.IntentIntegrator;
 import google.zxing.integration.android.IntentResult;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class CameraActivity extends Activity implements OnClickListener {
 
@@ -38,18 +50,17 @@ public class CameraActivity extends Activity implements OnClickListener {
     private HashMap<String, Item> itemsMap;
     private double subTotal, tax = 0.00;
     private String total = "0.00";
-    Firebase firebaseRef = new Firebase("https://hackshopcart.firebaseio.com/");
-
+    private FirebaseWrapper wrapper;
 
     private final Cart cart = new Cart();
     private final String TAG = "Camera Activity";
     private final String TRANSACTION_ID = Calendar.getInstance().SECOND + java.util.UUID.randomUUID().toString().replaceAll("-", "");
+    private AllowTransaction allowTransaction = new AllowTransaction(TRANSACTION_ID);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        Firebase.setAndroidContext(this);
 
         scanButton = (Button)findViewById(R.id.scanButton);
         payButton = (Button) findViewById(R.id.payButton);
@@ -65,9 +76,23 @@ public class CameraActivity extends Activity implements OnClickListener {
         ListView cartItemsListView = (ListView) findViewById(R.id.cartItemsListView);
         cartItemsListView.setAdapter(listAdapter);
 
-        //TODO: Add transaction ID to DB, pull total price
-        firebaseRef.setValue(TRANSACTION_ID);
-        firebaseRef.push();
+        Firebase.setAndroidContext(this);
+        Firebase ref = new Firebase("https://pliu-test.firebaseio.com/");
+        ref.authWithCustomToken("cP0KXtG09Tw7SIr7gXJMNpfcDChts06sKraqiBNd", new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                Log.d(TAG, "Successfully logged in with User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+            }
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                Log.d(TAG, firebaseError.toString());
+            }
+        });
+
+        wrapper = new FirebaseWrapper();
+        wrapper.activate(TRANSACTION_ID, ref);
+
+        wrapper.inititateTransaction();
     }
 
     @Override
@@ -112,8 +137,7 @@ public class CameraActivity extends Activity implements OnClickListener {
 
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    //Send authorization to process payment, return to home screen
-
+                    allowTransaction.execute();
                 }
             });
 
@@ -133,7 +157,6 @@ public class CameraActivity extends Activity implements OnClickListener {
         if (scanningResult != null) {
             // Display data
             String scanContent = scanningResult.getContents();
-            String scanFormat = scanningResult.getFormatName();
 
             if (itemsMap.containsKey(scanContent)) {
                 final Item item = itemsMap.get(scanContent);
@@ -142,20 +165,92 @@ public class CameraActivity extends Activity implements OnClickListener {
                 gateway.addTransactionElement(TRANSACTION_ID, item);
                 subTotal += item.getPrice();
 
-            }
-
-            for (Item item: cart.getItemsList()) {
-                formatTxt.setText("Item Name: " + item.getName());
-                contentTxt.setText("Price: " + item.getPrice());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {}
+                wrapper.addItem(item);
             }
 
         } else {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "No scan data received!", Toast.LENGTH_SHORT);
             toast.show();
+        }
+    }
+
+    /**
+     * Represents an Async task allowing transaction
+     */
+    public class AllowTransaction extends AsyncTask<Void, Void, Boolean> {
+
+        private String transactionId;
+
+        AllowTransaction(String transactionId) {
+            this.transactionId = transactionId;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            try {
+                URL url = new URL("https://glacial-bastion-6427.herokuapp.com/charge_card");
+                HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+
+                String urlParameters = "email=nico.dubus@hotmail.com&transID="+TRANSACTION_ID;
+                connection.setRequestMethod("POST");
+
+                connection.setDoOutput(true);
+                DataOutputStream dStream = new DataOutputStream(connection.getOutputStream());
+                dStream.writeBytes(urlParameters);
+                dStream.flush();
+                dStream.close();
+
+                int responseCode = connection.getResponseCode();
+                String output = "Request URL " + url;
+                output += System.getProperty("line.separator") + "Request Parameters " + urlParameters;
+                output += System.getProperty("line.separator") + "Response Code " + responseCode;
+
+                BufferedReader br  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = "";
+                StringBuilder responseOutput = new StringBuilder();
+
+                while((line = br.readLine()) != null){
+                    responseOutput.append(line);
+                }
+
+                br.close();
+                output += System.getProperty("line.separator") + responseOutput.toString();
+                Log.d(TAG, output);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//                    //Send authorization to process payment, return to home screen
+//                    Intent intent = new Intent(this, ShopperViewActivity.class);
+//                    /*EditText editText = (EditText) findViewById(R.id.edit_message);
+//                    String message = editText.getText().toString();
+//                    intent.putExtra(EXTRA_MESSAGE, message);*/
+//                    startActivity(intent);
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            transactionId = null;
+
+            if (success) {
+                Intent databackIntent = new Intent();
+                databackIntent.putExtra("login_status", "OK");
+                setResult(Activity.RESULT_OK, databackIntent);
+                finish();
+            } else {
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            transactionId = null;
         }
     }
 }

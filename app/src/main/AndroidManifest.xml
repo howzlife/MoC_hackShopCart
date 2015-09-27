@@ -46,6 +46,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hackathon.mastersofcode.hackshopcart.ShopperViewActivity" />
         </activity>
+        <activity
+            android:name=".CameraActivity"
+            android:label="@string/title_activity_shopper_view" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hackathon.mastersofcode.hackshopcart.CameraActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -154,6 +155,14 @@ public class ShopperViewActivity extends Activity
 
     public void onAddCard(View view){
 
+    }
+
+    public void openCameraView(View view) {
+        Intent intent = new Intent(this, CameraActivity.class);
+        /*EditText editText = (EditText) findViewById(R.id.edit_message);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);*/
+        startActivity(intent);
     }
 
 }

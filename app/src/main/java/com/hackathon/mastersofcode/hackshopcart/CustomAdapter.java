@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import Domain.Item;
-import WebServiceApi.WebServiceGateway;
+import com.hackathon.mastersofcode.hackshopcart.R;
 
 import java.util.List;
 
