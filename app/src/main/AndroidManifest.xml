@@ -39,6 +39,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hackathon.mastersofcode.hackshopcart.ShopperViewActivity" />
         </activity>
+        <activity
+            android:name=".AddCardActivity"
+            android:label="@string/title_activity_add_card"
+            android:parentActivityName=".ShopperViewActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hackathon.mastersofcode.hackshopcart.ShopperViewActivity" />
+        </activity>
     </application>
 
 </manifest>

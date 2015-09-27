@@ -6,8 +6,10 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.simplify.android.sdk.Simplify;
+import com.simplify.android.sdk.model.SimplifyError;
+import com.simplify.android.sdk.model.Token;
 
 public class ShopperViewActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -47,7 +51,6 @@ public class ShopperViewActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        Simplify simplify = new Simplify("sbpb_NDhiM2Q3ZDAtNjg2MS00M2FmLWJiYWEtYTNmZTc5YzMyYTE0");
     }
 
     @Override
@@ -147,6 +150,10 @@ public class ShopperViewActivity extends Activity
             ((ShopperViewActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    public void onAddCard(View view){
+
     }
 
 }
